@@ -1,0 +1,4 @@
+*cache*
+.vscode
+dump.rdb
+*.log
