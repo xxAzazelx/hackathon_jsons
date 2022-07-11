@@ -23,4 +23,8 @@ class HealthCheck(Resource):
                 status=HTTPStatus.INTERNAL_SERVER_ERROR,
                 mimetype=DEFAULT_MIMETYPE,
             )
-        return Response(response="The service is up and running", status=HTTPStatus.OK, mimetype=DEFAULT_MIMETYPE)
+        return Response(
+            response="The service is up and running",
+            status=HTTPStatus.OK,
+            mimetype=DEFAULT_MIMETYPE,
+        )

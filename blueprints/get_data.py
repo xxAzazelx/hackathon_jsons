@@ -30,8 +30,12 @@ class GetData(Resource):
                 mimetype=DEFAULT_MIMETYPE,
             )
 
-        parsed_data = {key.decode(): value.decode() for key, value in non_parsed_data.items()}
-        response = self.__create_response_template(vm_id=vm_id, redis_data=parsed_data, vault_key=vault_key)
+        parsed_data = {
+            key.decode(): value.decode() for key, value in non_parsed_data.items()
+        }
+        response = self.__create_response_template(
+            vm_id=vm_id, redis_data=parsed_data, vault_key=vault_key
+        )
         if parsed_data.get("isMeta"):
             response += self.__create_meta_template(redis_data=parsed_data)
 
@@ -41,7 +45,9 @@ class GetData(Resource):
             mimetype=DEFAULT_MIMETYPE,
         )
 
-    def __create_response_template(self, vm_id: str, redis_data: dict, vault_key: Optional[bytes] = None):
+    def __create_response_template(
+        self, vm_id: str, redis_data: dict, vault_key: Optional[bytes] = None
+    ):
         template_string = """
         The virtual machine $vm_id can be found under IP $host.
         Username and password required to login are: $username [$password].
@@ -53,7 +59,9 @@ class GetData(Resource):
         """This needs to be changed I didn't have time to setup it"""
         if vault_key:
             vault_client.token = vault_key
-            key = vault_client.secrets.kv.read_secret_version(path="secrets")["data"]["data"]["decryption_key"]
+            key = vault_client.secrets.kv.read_secret_version(path="secrets")["data"][
+                "data"
+            ]["decryption_key"]
             cipher = Fernet(key.encode())
             username = cipher.decrypt(username.encode()).decode()
             password = cipher.decrypt(password.encode()).decode()

@@ -2,3 +2,4 @@
 .vscode
 dump.rdb
 *.log
+slim.report.json

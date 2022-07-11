@@ -1,6 +1,7 @@
 import logging
 from configparser import ConfigParser
 from dataclasses import dataclass
+from http import HTTPStatus
 from os.path import dirname, join
 from typing import List
 
@@ -8,7 +9,7 @@ from hvac import Client as VaultClient
 from redis import Redis
 
 logger = logging.getLogger()
-logging.basicConfig(level=logging.INFO, filename="hackathon_json.log")
+logging.basicConfig(level=logging.INFO)
 
 try:
     from fakeredis import FakeRedis  # noqa: F401
@@ -32,6 +33,13 @@ if DEVELOPMENT:
 
 """Production env"""
 
+error_handling = {
+    "ConnectionError": {
+        "message": "Program has encountered the database connection error",
+        "status": HTTPStatus.INTERNAL_SERVER_ERROR,
+    },
+}
+
 
 @dataclass(frozen=True)
 class RedisParams:
@@ -40,7 +48,11 @@ class RedisParams:
     redis_password: str = config.get(section="Redis", option="password", fallback="")
 
 
-redis_db = Redis(host=RedisParams.redis_host, port=RedisParams.redis_port, password=RedisParams.redis_password)
+redis_db = Redis(
+    host=RedisParams.redis_host,
+    port=RedisParams.redis_port,
+    password=RedisParams.redis_password,
+)
 
 
 @dataclass(frozen=True)
@@ -49,11 +61,15 @@ class VaultParams:
     vault_port: int = config.getint(section="Vault", option="port", fallback=8200)
 
 
-vault_client = VaultClient(url=f"http://{VaultParams.vault_host}:{VaultParams.vault_port}")
+vault_client = VaultClient(
+    url=f"http://{VaultParams.vault_host}:{VaultParams.vault_port}"
+)
 
 
 class DataParams:
-    required_service: str = config.get(section="Data", option="required_service", fallback="terraform")
+    required_service: str = config.get(
+        section="Data", option="required_service", fallback="terraform"
+    )
     common_params: List[str] = ["host", "username", "password"]
     list_params: List[str] = ["interfaces"]
     meta_params: List[str] = ["uuid", "createdAt", "expirationDate", "team"]

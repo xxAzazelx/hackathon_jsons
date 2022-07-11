@@ -3,3 +3,8 @@ style_config/
 .gitignore
 .pre-commit*
 README.md
+*cache*
+.vscode
+slim.report.json
+dump.rdb
+*.log
