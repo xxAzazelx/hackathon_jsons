@@ -1,14 +1,12 @@
-FROM python:3.9-bullseye AS builder
+FROM centos:9-stream-poetry AS builder
 
 COPY poetry.lock pyproject.toml /src/
 WORKDIR /src
 
-RUN pip install poetry && \
-                poetry config virtualenvs.in-project true && \
-                poetry install --no-dev
+RUN poetry install --no-dev
 
 
-FROM python:3.9-slim
+FROM centos:9-stream
 
 WORKDIR /src
 COPY ./ /src

@@ -23,7 +23,13 @@ flake8 = "^4.0.1"
 black = "^22.3.0"
 isort = "^5.10.1"
 fakeredis = "^1.8.1"
+poethepoet = "^0.15.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+build = "docker-slim build --http-probe=false --continue-after=1 --dockerfile=Dockerfile --tag=json_parser:latest $PWD"
+clean = "docker rmi -f json_parser.fat:latest"
+up = "docker-compose up -d"

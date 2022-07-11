@@ -18,7 +18,9 @@ class JSONUpload(Resource):
         file = request.files.get("vm_data")
         if not file:
             return Response(
-                response="The correct file wasn't provided", status=HTTPStatus.BAD_REQUEST, mimetype=DEFAULT_MIMETYPE
+                response="The correct file wasn't provided",
+                status=HTTPStatus.BAD_REQUEST,
+                mimetype=DEFAULT_MIMETYPE,
             )
 
         temporary_file = join(DataParams.temp_file_directory, file.filename)

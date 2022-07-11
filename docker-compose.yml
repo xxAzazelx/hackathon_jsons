@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  server:
+    image: json_parser:latest
+    container_name: json_parser
+    depends_on:
+      - database
+      - vault
+    restart: unless-stopped
+    ports:
+      - 18000:18000
+    networks:
+      - backend
+      - frontend
+
+  database:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: parser_database
+    networks:
+      - backend
+
+  vault:
+    image: vault:latest
+    restart: unless-stopped
+    container_name: vault
+    networks:
+      - frontend
+    ports:
+      - 8200:8200
+
+networks:
+  backend:
+  frontend:
