@@ -1,0 +1,5 @@
+setup.cfg
+style_config/
+.gitignore
+.pre-commit*
+README.md
